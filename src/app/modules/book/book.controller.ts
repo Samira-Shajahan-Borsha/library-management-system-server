@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Book } from "./book.model";
-import z from "zod";
+import z, { json } from "zod";
 
 const createBookZodSchema = z.object({
   title: z.string(),
@@ -70,7 +70,65 @@ const getAllBooks = async (req: Request, res: Response) => {
   }
 };
 
+const getBookById = async (req: Request, res: Response) => {
+  try {
+    const { bookId } = req.params;
+
+    const data = await Book.findById(bookId);
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+        error: `No book exists in the database with the given ID: ${bookId}`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Book retrieved successfully",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to retrieve book",
+      error,
+    });
+  }
+};
+
+const deleteBookById = async (req: Request, res: Response) => {
+  try {
+    const { bookId } = req.params;
+
+    const deletedBook = await Book.findByIdAndDelete(bookId);
+
+    if (!deletedBook) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found. Unable to delete.",
+        error: `No book exists in the database with the given ID: ${bookId}`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Book deleted successfully",
+      data: null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete book.",
+      error,
+    });
+  }
+};
+
 export const bookController = {
   createBook,
   getAllBooks,
+  getBookById,
+  deleteBookById,
 };
