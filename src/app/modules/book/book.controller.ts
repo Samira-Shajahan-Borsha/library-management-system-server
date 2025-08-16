@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Book } from "./book.model";
 import z from "zod";
 
-const createBookZodSchema = z.strictObject({
+const createBookZodSchema = z.object({
   title: z.string(),
   author: z.string(),
   genre: z.enum([
@@ -41,6 +41,36 @@ const createBook = async (req: Request, res: Response) => {
   }
 };
 
+const getAllBooks = async (req: Request, res: Response) => {
+  try {
+    const { filter, sort = "desc", limit } = req.query;
+    console.log(filter);
+
+    const query = filter ? { genre: filter } : {};
+
+    const sortDir = sort === "asc" ? 1 : -1;
+
+    const limitValue = limit ? Number(limit) : 10;
+
+    const data = await Book.find(query)
+      .sort({ createdAt: sortDir })
+      .limit(limitValue);
+
+    res.status(200).json({
+      success: true,
+      message: "Books retrieved successfully",
+      data,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to retrieve books",
+      error,
+    });
+  }
+};
+
 export const bookController = {
   createBook,
+  getAllBooks,
 };
