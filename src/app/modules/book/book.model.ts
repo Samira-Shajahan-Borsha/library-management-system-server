@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
-import { IBook } from "./book.interface";
+import { BookStaticModel, IBook } from "./book.interface";
 
-const bookSchema = new Schema<IBook>(
+const bookSchema = new Schema<IBook, BookStaticModel>(
   {
     title: {
       type: String,
@@ -53,4 +53,29 @@ const bookSchema = new Schema<IBook>(
   }
 );
 
-export const Book = model<IBook>("book", bookSchema);
+// Update book availablity when book copeies become 0
+bookSchema.static(
+  "updateBookAvailability",
+  async function updateBookAvailability(bookId) {
+    if (bookId) {
+      const book = await Book.findById(bookId);
+      if (book?.copies === 0) {
+        await Book.findByIdAndUpdate(
+          bookId,
+          { available: false },
+          { new: true }
+        );
+      }
+    }
+  }
+);
+
+bookSchema.static("checkBookAvailability", async function (bookId, quantity) {
+  const book = await this.findById(bookId);
+  console.log(book, "checkBookAvailability from Book static method");
+
+  if (book?.available && book?.copies >= quantity) return true;
+  return false;
+});
+
+export const Book = model<IBook, BookStaticModel>("book", bookSchema);
