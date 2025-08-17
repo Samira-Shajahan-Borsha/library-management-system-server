@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Book } from "./book.model";
-import z, { json } from "zod";
+import z from "zod";
 
 const createBookZodSchema = z.object({
   title: z.string(),
@@ -18,6 +18,8 @@ const createBookZodSchema = z.object({
   copies: z.number().min(0, "Copies must be a positive number"),
   available: z.boolean().optional(),
 });
+
+const updateBookZodSchema = createBookZodSchema.partial();
 
 const createBook = async (req: Request, res: Response) => {
   try {
@@ -98,6 +100,41 @@ const getBookById = async (req: Request, res: Response) => {
   }
 };
 
+const updateBook = async (req: Request, res: Response) => {
+  try {
+    const { bookId } = req.params;
+
+    const payload = req.body;
+
+    await updateBookZodSchema.parseAsync(payload);
+
+    const data = await Book.findByIdAndUpdate(bookId, payload, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!data) {
+      res.status(404).json({
+        success: false,
+        message: "Book not found. Unable to update",
+        error: `No book exists in the database with the given ID: ${bookId}`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Book updated successfully",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update book",
+      error,
+    });
+  }
+};
+
 const deleteBookById = async (req: Request, res: Response) => {
   try {
     const { bookId } = req.params;
@@ -130,5 +167,6 @@ export const bookController = {
   createBook,
   getAllBooks,
   getBookById,
+  updateBook,
   deleteBookById,
 };
