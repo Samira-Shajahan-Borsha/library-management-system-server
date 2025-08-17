@@ -138,22 +138,25 @@ The application should now be running locally on `http://localhost:5000`.
   ```
 
 - **Get All Books**  
-  `GET /api/books`  
+   `GET /api/books`
+
+  Example Query:
+
+  `/api/books?filter=FANTASY&sortBy=createdAt&sort=desc&limit=5`
+
   **Query Parameters**:
 
   - `filter`: Genre to filter by.
   - `sort`: Sorting order (`asc` or `desc`).
   - `limit`: Number of results to fetch.
 
-- **Get Book by ID**  
-  `GET /api/books/:bookId`  
   **Response**:
 
   ```json
   {
-    "success": true,
-    "message": "Book retrieved successfully",
-    "data":[
+  "success": true,
+  "message": "Books retrieved successfully",
+  "data": [
     {
       "_id": "64f123abc4567890def12345",
       "title": "The Theory of Everything",
@@ -168,6 +171,29 @@ The application should now be running locally on `http://localhost:5000`.
     }
     {...}
   ]
+  }
+  ```
+
+- **Get Book by ID**  
+   `GET /api/books/:bookId`  
+   **Response**:
+
+  ```json
+  {
+    "success": true,
+    "message": "Book retrieved successfully",
+    "data": {
+      "_id": "64f123abc4567890def12345",
+      "title": "The Theory of Everything",
+      "author": "Stephen Hawking",
+      "genre": "SCIENCE",
+      "isbn": "9780553380163",
+      "description": "An overview of cosmology and black holes.",
+      "copies": 5,
+      "available": true,
+      "createdAt": "2024-11-19T10:23:45.123Z",
+      "updatedAt": "2024-11-19T10:23:45.123Z"
+    }
   }
   ```
 
@@ -203,7 +229,7 @@ The application should now be running locally on `http://localhost:5000`.
   ```
 
 - **Delete Book**  
-  `DELETE /api/books/:bookId`  
+   `DELETE /api/books/:bookId`  
   **Response**:
   ```json
   {
@@ -216,14 +242,14 @@ The application should now be running locally on `http://localhost:5000`.
 ### Borrow Management
 
 - **Borrow a Book**  
-  `POST /api/borrow`  
-  **Request**:
+   `POST /api/borrow`  
+   **Request**:
 
   ```json
   {
-    "book": "64ab3f9e2a4b5c6d7e8f9012",
-    "quantity": 2,
-    "dueDate": "2025-07-18T00:00:00.000Z"
+    "book": "68a0e51834315c4a9a4660e2",
+    "quantity": 1,
+    "dueDate": "2025-08-20"
   }
   ```
 
@@ -233,23 +259,39 @@ The application should now be running locally on `http://localhost:5000`.
   {
     "success": true,
     "message": "Book borrowed successfully",
-    "data": { ... }
+    "data": {
+      "book": "68a0e51834315c4a9a4660e2",
+      "quantity": 1,
+      "dueDate": "2025-08-20T00:00:00.000Z",
+      "_id": "68a2601f41d7969942e25805",
+      "createdAt": "2025-08-17T23:05:03.514Z",
+      "updatedAt": "2025-08-17T23:05:03.514Z"
+    }
   }
   ```
 
 - **Borrowed Books Summary**  
-  `GET /api/borrow`  
-  **Response**:
+   `GET /api/borrow`  
+   **Response**:
   ```json
   {
     "success": true,
     "message": "Borrowed books summary retrieved successfully",
     "data": [
       {
-        "book": { "title": "The Theory of Everything", "isbn": "9780553380163" },
-        "totalQuantity": 5
+        "totalQuantity": 4,
+        "book": {
+          "title": "Fantasy Adventures",
+          "isbn": "978100006"
+        }
       },
-      { ... }
+      {
+        "totalQuantity": 2,
+        "book": {
+          "title": "Non-Fiction Deep Dive",
+          "isbn": "978100013"
+        }
+      }
     ]
   }
   ```
