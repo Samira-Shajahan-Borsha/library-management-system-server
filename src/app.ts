@@ -18,8 +18,21 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
       success: false,
       message: "Something went wrong",
     });
-    next();
   }
+});
+
+// Not found route middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+    error: `Cannot ${req.method} ${req.originalUrl}`,
+  });
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
 export default app;
