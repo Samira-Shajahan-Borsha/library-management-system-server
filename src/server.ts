@@ -9,9 +9,8 @@ async function main() {
     app.listen(config.PORT, () => {
       console.log(`✅ Server is running on port: ${config.PORT}`);
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("❌ Error from server: ", error);
-    throw new Error(error.message);
   }
 }
 

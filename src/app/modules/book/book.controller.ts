@@ -34,7 +34,7 @@ const createBook = async (req: Request, res: Response) => {
       message: "Book created successfully",
       data,
     });
-  } catch (error: any) {
+  } catch (error) {
     return res.status(400).json({
       message: "Failed to create a book",
       success: false,
@@ -46,7 +46,7 @@ const createBook = async (req: Request, res: Response) => {
 const getAllBooks = async (req: Request, res: Response) => {
   try {
     const { filter, sort = "desc", limit } = req.query;
-    console.log(filter);
+    // console.log(filter);
 
     const query = filter ? { genre: filter } : {};
 
@@ -63,7 +63,7 @@ const getAllBooks = async (req: Request, res: Response) => {
       message: "Books retrieved successfully",
       data,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return res.status(500).json({
       success: false,
       message: "Failed to retrieve books",

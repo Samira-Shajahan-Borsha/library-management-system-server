@@ -50,7 +50,7 @@ const bookSchema = new Schema<IBook, BookStaticModel>(
   {
     versionKey: false,
     timestamps: true,
-  }
+  },
 );
 
 // Update book availablity when book copeies become 0
@@ -63,16 +63,16 @@ bookSchema.static(
         await Book.findByIdAndUpdate(
           bookId,
           { available: false },
-          { new: true }
+          { new: true },
         );
       }
     }
-  }
+  },
 );
 
 bookSchema.static("checkBookAvailability", async function (bookId, quantity) {
   const book = await this.findById(bookId);
-  console.log(book, "checkBookAvailability from Book static method");
+  // console.log(book, "checkBookAvailability from Book static method");
 
   if (book?.available && book?.copies >= quantity) return true;
   return false;

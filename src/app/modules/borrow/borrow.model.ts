@@ -22,7 +22,7 @@ const borrowSchema = new Schema<IBorrow>(
   {
     versionKey: false,
     timestamps: true,
-  }
+  },
 );
 
 // Update the book copies before borrow a book
@@ -33,7 +33,7 @@ borrowSchema.pre("save", async function (next) {
     if (!book) {
       throw new Error("Book not found");
     }
-    
+
     const copies = (book.copies as number) - this.quantity;
     await Book.findByIdAndUpdate(this.book, { copies }, { new: true });
     next();

@@ -19,7 +19,7 @@ const borrowBookSchema = z.object({
     {
       message:
         "Due date must be a valid date in YYYY-MM-DD or ISO format and cannot be in the past",
-    }
+    },
   ),
 });
 
@@ -40,7 +40,7 @@ const borrowBook = async (req: Request, res: Response) => {
 
     const isBookAvailable = await Book.checkBookAvailability(
       payload?.book,
-      payload?.quantity
+      payload?.quantity,
     );
 
     if (!isBookAvailable) {
@@ -105,7 +105,7 @@ const getBorrowedBooksSummary = async (req: Request, res: Response) => {
       data: summary,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({
       success: false,
       message: "Failed to retrieve borrowed books summary",

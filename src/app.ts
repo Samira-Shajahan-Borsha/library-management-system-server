@@ -7,7 +7,7 @@ app.use(express.json());
 
 app.use("/api", routes);
 
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
+app.get("/", (req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -17,6 +17,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({
       success: false,
       message: "Something went wrong",
+      error,
     });
   }
 });
@@ -28,10 +29,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     message: "Route not found",
     error: `Cannot ${req.method} ${req.originalUrl}`,
   });
+  next();
 });
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
+app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
   res.status(500).send("Something broke!");
 });
 
