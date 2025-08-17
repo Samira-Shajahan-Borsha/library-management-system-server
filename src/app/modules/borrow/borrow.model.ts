@@ -28,31 +28,15 @@ const borrowSchema = new Schema<IBorrow>(
 // Update the book copies before borrow a book
 borrowSchema.pre("save", async function (next) {
   try {
-    console.log(this, "From pre hook");
     const book = await Book.findById(this.book);
 
     if (!book) {
       throw new Error("Book not found");
     }
-
-    const isBookAvailable = await Book.checkBookAvailability(
-      book?.id,
-      this.quantity
-    );
-
-    console.log(isBookAvailable, "isBookAvailable in pre hook");
-    if (isBookAvailable) {
-      const copies = (book.copies as number) - this.quantity;
-      const updatedBook = await Book.findByIdAndUpdate(
-        this.book,
-        { copies },
-        { new: true }
-      );
-      console.log(updatedBook, "updatedBook");
-      next();
-    } else {
-      throw new Error("Insuffecient book copies");
-    }
+    
+    const copies = (book.copies as number) - this.quantity;
+    await Book.findByIdAndUpdate(this.book, { copies }, { new: true });
+    next();
   } catch (error) {
     console.log(error);
   }
