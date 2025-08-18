@@ -142,7 +142,7 @@ The application should now be running locally on `http://localhost:5000`.
 
   Example Query:
 
-  `/api/books?filter=FANTASY&sortBy=createdAt&sort=desc&limit=5`
+  `/api/books?filter=FANTASY&sort=desc&limit=5`
 
   **Query Parameters**:
 
@@ -301,7 +301,7 @@ The application should now be running locally on `http://localhost:5000`.
 ## Links
 
 - **GitHub Repository**: [GitHub Link](https://github.com/Samira-Shajahan-Borsha/phl2b5-library-management-system-server)
-- **Live Deployment**: [Live Link](#)
+- **Live Deployment**: [Live Link](https://library-management-system-server-xi.vercel.app/)
 - **Video Explanation**: [Video Link](#)
 
 ---
