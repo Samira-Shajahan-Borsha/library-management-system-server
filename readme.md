@@ -302,7 +302,6 @@ The application should now be running locally on `http://localhost:5000`.
 
 - **GitHub Repository**: [GitHub Link](https://github.com/Samira-Shajahan-Borsha/phl2b5-library-management-system-server)
 - **Live Deployment**: [Live Link](https://library-management-system-server-xi.vercel.app/)
-- **Video Explanation**: [Video Link](#)
 
 ---
 
