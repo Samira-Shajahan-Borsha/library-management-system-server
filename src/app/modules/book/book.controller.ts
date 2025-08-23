@@ -15,11 +15,28 @@ const createBookZodSchema = z.object({
   ]),
   isbn: z.string(),
   description: z.string().optional(),
-  copies: z.number().min(0, "Copies must be a positive number"),
+  copies: z.number().min(1, "Copies must be a positive number"),
   available: z.boolean().optional(),
 });
 
-const updateBookZodSchema = createBookZodSchema.partial();
+export const updateBookZodSchema = z.object({
+  title: z.string().optional(),
+  author: z.string().optional(),
+  genre: z
+    .enum([
+      "FICTION",
+      "NON_FICTION",
+      "SCIENCE",
+      "HISTORY",
+      "BIOGRAPHY",
+      "FANTASY",
+    ])
+    .optional(),
+  isbn: z.string().optional(),
+  description: z.string().optional(),
+  copies: z.number().min(0, "Copies can not be a negative number").optional(),
+  available: z.boolean().optional(),
+});
 
 const createBook = async (req: Request, res: Response) => {
   try {
@@ -108,10 +125,12 @@ const updateBook = async (req: Request, res: Response) => {
 
     await updateBookZodSchema.parseAsync(payload);
 
-    const data = await Book.findByIdAndUpdate(bookId, payload, {
+    const data = await Book.findOneAndUpdate({ _id: bookId }, payload, {
       new: true,
       runValidators: true,
     });
+
+    console.log(data, "data from update book");
 
     if (!data) {
       res.status(404).json({

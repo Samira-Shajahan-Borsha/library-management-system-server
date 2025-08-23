@@ -40,7 +40,7 @@ const bookSchema = new Schema<IBook, BookStaticModel>(
     copies: {
       type: Number,
       required: [true, "Copies is required"],
-      min: [0, "Copies must be a positive number"],
+      min: [0, "Copies can not be a negative number"],
     },
     available: {
       type: Boolean,
@@ -50,10 +50,24 @@ const bookSchema = new Schema<IBook, BookStaticModel>(
   {
     versionKey: false,
     timestamps: true,
-  },
+  }
 );
 
-// Update book availablity when book copeies become 0
+bookSchema.pre("findOneAndUpdate", function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const update = this.getUpdate() as any;
+
+  // console.log(update, "update from pre hook");
+
+  if (update.copies !== undefined) {
+    update.available = update.copies > 0;
+    this.setUpdate(update);
+  }
+
+  next();
+});
+
+// Update book availablity when book copies become 0
 bookSchema.static(
   "updateBookAvailability",
   async function updateBookAvailability(bookId) {
@@ -63,11 +77,11 @@ bookSchema.static(
         await Book.findByIdAndUpdate(
           bookId,
           { available: false },
-          { new: true },
+          { new: true }
         );
       }
     }
-  },
+  }
 );
 
 bookSchema.static("checkBookAvailability", async function (bookId, quantity) {
