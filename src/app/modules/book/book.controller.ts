@@ -130,7 +130,7 @@ const updateBook = async (req: Request, res: Response) => {
       runValidators: true,
     });
 
-    console.log(data, "data from update book");
+    // console.log(data, "data from update book");
 
     if (!data) {
       res.status(404).json({
