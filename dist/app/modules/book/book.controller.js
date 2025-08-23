@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bookController = void 0;
+exports.bookController = exports.updateBookZodSchema = void 0;
 const book_model_1 = require("./book.model");
 const zod_1 = __importDefault(require("zod"));
 const createBookZodSchema = zod_1.default.object({
@@ -28,10 +28,27 @@ const createBookZodSchema = zod_1.default.object({
     ]),
     isbn: zod_1.default.string(),
     description: zod_1.default.string().optional(),
-    copies: zod_1.default.number().min(0, "Copies must be a positive number"),
+    copies: zod_1.default.number().min(1, "Copies must be a positive number"),
     available: zod_1.default.boolean().optional(),
 });
-const updateBookZodSchema = createBookZodSchema.partial();
+exports.updateBookZodSchema = zod_1.default.object({
+    title: zod_1.default.string().optional(),
+    author: zod_1.default.string().optional(),
+    genre: zod_1.default
+        .enum([
+        "FICTION",
+        "NON_FICTION",
+        "SCIENCE",
+        "HISTORY",
+        "BIOGRAPHY",
+        "FANTASY",
+    ])
+        .optional(),
+    isbn: zod_1.default.string().optional(),
+    description: zod_1.default.string().optional(),
+    copies: zod_1.default.number().min(0, "Copies can not be a negative number").optional(),
+    available: zod_1.default.boolean().optional(),
+});
 const createBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const payload = req.body;
@@ -104,11 +121,12 @@ const updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const { bookId } = req.params;
         const payload = req.body;
-        yield updateBookZodSchema.parseAsync(payload);
-        const data = yield book_model_1.Book.findByIdAndUpdate(bookId, payload, {
+        yield exports.updateBookZodSchema.parseAsync(payload);
+        const data = yield book_model_1.Book.findOneAndUpdate({ _id: bookId }, payload, {
             new: true,
             runValidators: true,
         });
+        // console.log(data, "data from update book");
         if (!data) {
             res.status(404).json({
                 success: false,
