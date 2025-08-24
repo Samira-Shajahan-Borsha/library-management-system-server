@@ -9,19 +9,16 @@ This project is a RESTful API for managing a library system built with **Express
 ## Features
 
 - **Book Management**:
-
   - Create, read, update, and delete books.
   - Books have fields like title, author, genre, ISBN, description, available copies, and availability status.
   - Books are filtered and sorted based on different query parameters.
 
 - **Borrowing System**:
-
   - Borrow books by verifying the available copies.
   - Deduct borrowed copies from the total stock and mark the book as unavailable if all copies are borrowed.
   - View borrowing history with aggregated data of total borrowed books.
 
 - **Data Validation**:
-
   - Validates data for books and borrow records using **Zod**.
   - Ensures book genres are within predefined values.
   - ISBN and other fields are checked for uniqueness and required status.
@@ -60,13 +57,13 @@ This project is a RESTful API for managing a library system built with **Express
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Samira-Shajahan-Borsha/phl2b5-library-management-system-server
+   git clone https://github.com/Samira-Shajahan-Borsha/library-management-system-server.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd phl2b5-library-management-system-server
+   cd library-management-system-server
    ```
 
 3. Install dependencies:
@@ -76,7 +73,6 @@ This project is a RESTful API for managing a library system built with **Express
    ```
 
 4. Set up your environment variables:
-
    - Create a `.env` file in the root directory.
 
    Example `.env`:
@@ -145,7 +141,6 @@ The application should now be running locally on `http://localhost:5000`.
   `/api/books?filter=FANTASY&sort=desc&limit=5`
 
   **Query Parameters**:
-
   - `filter`: Genre to filter by.
   - `sort`: Sorting order (`asc` or `desc`).
   - `limit`: Number of results to fetch.
@@ -300,7 +295,7 @@ The application should now be running locally on `http://localhost:5000`.
 
 ## Links
 
-- **GitHub Repository**: [GitHub Link](https://github.com/Samira-Shajahan-Borsha/phl2b5-library-management-system-server)
+- **GitHub Repository**: [GitHub Link](https://github.com/Samira-Shajahan-Borsha/library-management-system-server)
 - **Live Deployment**: [Live Link](https://library-management-system-server-xi.vercel.app/)
 
 ---
